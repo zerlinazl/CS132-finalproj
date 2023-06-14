@@ -131,7 +131,6 @@ async function getTagsList(byFeature) {
  * @returns JSON of the relevant menu items.
  */
 async function filterFeatures(type, criteria) {
-    console.log("filterfeatures")
     try {
         criteria = criteria.flat(1);
         let allFeatures = [];
@@ -159,7 +158,8 @@ async function filterFeatures(type, criteria) {
         }
         return allFeatures;
     } catch (err) {
-        console.log(err.message);
+        res.type("text");
+        res.status(SERVER_CODE).send(ERROR);
     }
 }
 
@@ -183,7 +183,6 @@ app.get("/allfeatures", async(req, res) => {
             m = JSON.parse(m);
             matchCatNames.push(m.menu[0].source);
         }
-        console.log(matchCatNames);
         res.json({"match" : matchCatNames});
 
     } catch(err) {
@@ -214,7 +213,6 @@ app.get("/z_features/:tags", async (req, res) => {
         let validTags = false;
         for (let i=0; i< tagsList.length; i++) {
             let subList = tagsList[i];
-            console.log(subList);
             if (subList.join(' ') == req.params.tags) {
                 validTags = true;
             }
@@ -222,7 +220,6 @@ app.get("/z_features/:tags", async (req, res) => {
         if (!validTags) {
             res.status(CLIENT_CODE).send("Invalid tags");
         }
-        console.log("8888888");
         let response = await filterFeatures("*", req.params.tags.split(" "))
         res.json(response);
     } catch (err) {
